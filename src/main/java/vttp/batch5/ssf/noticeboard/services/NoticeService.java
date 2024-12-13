@@ -36,24 +36,8 @@ public class NoticeService {
 	// You can change the signature of this method by adding any number of
 	// parameters
 	// and return any type
-	public String postToNoticeServer(Notice notice) {
-
-		// create Json array for categories
-		List<String> cat = notice.getCategories();
-		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
-		for (String c : cat){
-			arrayBuilder.add(c);
-		}
-
-		// create json request payload
-        JsonObject json = Json.createObjectBuilder()
-            .add("title", notice.getTitle())
-            .add("poster", notice.getPoster())
-			.add("postDate", notice.getPostDate().getTime())
-			.add("categories", arrayBuilder.build())
-			.add("text", notice.getText())
-            .build();
-
+	public String postToNoticeServer(JsonObject json) {
+		
 		System.out.printf(">>> request payload: %s\n", json.toString());		
 
         // create a request
@@ -71,8 +55,9 @@ public class NoticeService {
 			String payload = resp.getBody();
             System.out.printf(">>> payload: %s\n", payload);
             
-			// JsonReader reader = Json.createReader(new StringReader(payload));
-            // JsonObject jsonObj = reader.readObject();
+			JsonReader reader = Json.createReader(new StringReader(payload));
+            JsonObject jsonObj = reader.readObject();
+			noticeRepo.insertNotices(jsonObj);
 			// String id = noticeRepo.insertNotices(jsonObj);
 			// System.out.printf(">>> id: ");
             return payload;
@@ -85,10 +70,10 @@ public class NoticeService {
 
 	}
 
-	// write the success json payload into redis
-	public void insertNotices(JsonObject obj){
-		noticeRepo.insertNotices(obj);
-	}
+	// // write the success json payload into redis
+	// public void insertNotices(JsonObject obj){
+	// 	noticeRepo.insertNotices(obj);
+	// }
 
 	// get random key
 	public String getRandomKey(){

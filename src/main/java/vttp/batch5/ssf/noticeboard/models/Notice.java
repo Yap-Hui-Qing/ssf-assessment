@@ -5,6 +5,9 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.json.Json;
+import jakarta.json.JsonArrayBuilder;
+import jakarta.json.JsonObject;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
@@ -78,5 +81,25 @@ public class Notice {
     public String toString() {
         return "Notice [title=" + title + ", poster=" + poster + ", postDate=" + postDate + ", categories=" + categories
                 + ", text=" + text + "]";
+    }
+
+    public JsonObject toJson(){
+        // create Json array for categories
+		List<String> cat = this.getCategories();
+		JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+		for (String c : cat){
+			arrayBuilder.add(c);
+		}
+
+		// create json request payload
+        JsonObject json = Json.createObjectBuilder()
+            .add("title", this.getTitle())
+            .add("poster", this.getPoster())
+			.add("postDate", this.getPostDate().getTime())
+			.add("categories", arrayBuilder.build())
+			.add("text", this.getText())
+            .build();
+
+        return json;
     }
 }

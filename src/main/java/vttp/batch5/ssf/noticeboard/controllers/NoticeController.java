@@ -72,7 +72,10 @@ public class NoticeController {
 
         System.out.println(notice.toString());
 
-        String resp = noticeSvc.postToNoticeServer(notice);
+        // task 5
+        JsonObject json = notice.toJson();
+        System.out.println(json.toString());
+        String resp = noticeSvc.postToNoticeServer(json);
 
         JsonReader reader = Json.createReader(new StringReader(resp));
         JsonObject obj = reader.readObject();
@@ -83,6 +86,7 @@ public class NoticeController {
             return "view3";
         }
 
+        // noticeSvc.insertNotices(obj);
         String id = obj.getString("id");
         model.addAttribute("id", id);
         return "view2";
