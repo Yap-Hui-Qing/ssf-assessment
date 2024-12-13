@@ -37,7 +37,7 @@ public class NoticeService {
 	// parameters
 	// and return any type
 	public String postToNoticeServer(JsonObject json) {
-		
+
 		System.out.printf(">>> request payload: %s\n", json.toString());		
 
         // create a request
@@ -57,6 +57,8 @@ public class NoticeService {
             
 			JsonReader reader = Json.createReader(new StringReader(payload));
             JsonObject jsonObj = reader.readObject();
+
+			// write the success json payload into redis
 			noticeRepo.insertNotices(jsonObj);
 			// String id = noticeRepo.insertNotices(jsonObj);
 			// System.out.printf(">>> id: ");
@@ -65,7 +67,6 @@ public class NoticeService {
 		} catch (HttpClientErrorException ex){
 			System.out.println(ex.getResponseBodyAsString());
             return ex.getResponseBodyAsString();
-		
 		}
 
 	}

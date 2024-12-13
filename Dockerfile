@@ -39,7 +39,7 @@ EXPOSE ${PORT}
 
 
 HEALTHCHECK --interval=60s --start-period=120s \
-    CMD curl http://localhost:${PORT}/status || exit 1
+    CMD curl -s -f http://localhost:${PORT}/status || exit 1
 
 
 SHELL [ "/bin/sh", "-c" ]
